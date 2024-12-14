@@ -1,0 +1,115 @@
+# Inventory Management System
+
+class Product:
+    def __init__(self, product_id, name, description, price, quantity):
+        self.product_id = product_id
+        self.name = name
+        self.description = description
+        self.price = price
+        self.quantity = quantity
+
+    def product_details(self):
+        return (
+            f"Product ID: {self.product_id}\n"
+            f"Name: {self.name}\n"
+            f"Description: {self.description}\n"
+            f"Price: ${self.price:.2f}\n"
+            f"Quantity: {self.quantity}\n"
+        )
+
+
+class Inventory:
+    def __init__(self):
+        self.products = []
+
+    def add_product(self, product):
+        self.products.append(product)
+
+    def display_products(self):
+        if not self.products:
+            print("No products in inventory.")
+        else:
+            print("Products in Inventory:")
+            for product in self.products:
+                print(f"- {product.name} (ID: {product.product_id})")
+
+    def search_product(self, product_id):
+        for product in self.products:
+            if product.product_id == product_id:
+                return product
+        return None
+
+    def calculate_total_value(self):
+        return sum(product.price * product.quantity for product in self.products)
+
+
+inventory = Inventory()
+
+while True:
+    print("\nInventory Menu:")
+    print("1. Add New Product")
+    print("2. Display All Products")
+    print("3. Update Stock Quantity")
+    print("4. Calculate Total Inventory Value")
+    print("5. Exit")
+    print()
+    choice = input("Enter choice: ")
+    print()
+
+    # Add New Product
+    if choice == "1":
+        product_id = input("Enter Product ID: ")
+        name = input("Enter Product Name: ")
+        description = input("Enter Product Description: ")
+
+        while True:
+            try:
+                price = float(input("Enter Product Price: "))
+                break
+            except ValueError:
+                print("Invalid input. Please enter a valid number.")
+
+        while True:
+            try:
+                quantity = int(input("Enter Product Quantity: "))
+                break
+            except ValueError:
+                print("Invalid input. Please enter a valid integer.")
+
+        new_product = Product(product_id, name, description, price, quantity)
+        inventory.add_product(new_product)
+        print("New product added to inventory.")
+
+    # Display All Products
+    elif choice == "2":
+        inventory.display_products()
+
+    # Update Stock Quantity
+    elif choice == "3":
+        product_id = input("Enter Product ID to update: ")
+        product = inventory.search_product(product_id)
+        if product:
+            print(f"Current Quantity: {product.quantity}")
+            while True:
+                try:
+                    new_quantity = int(input("Enter New Quantity: "))
+                    product.quantity = new_quantity
+                    print("Stock quantity updated.")
+                    break
+                except ValueError:
+                    print("Invalid input. Please enter a valid integer.")
+        else:
+            print("Product not found.")
+
+    # Calculate Total Inventory Value
+    elif choice == "4":
+        total_value = inventory.calculate_total_value()
+        print(f"Total Inventory Value: ${total_value:.2f}")
+
+    # Exit Program
+    elif choice == "5":
+        print("Exiting Inventory Management System.")
+        break
+
+    else:
+        print("Invalid choice. Try again.")
